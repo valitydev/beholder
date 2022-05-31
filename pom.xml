@@ -39,7 +39,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>swag-payments</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.627-0089567-server</version>
         </dependency>
 
         <!--spring-->

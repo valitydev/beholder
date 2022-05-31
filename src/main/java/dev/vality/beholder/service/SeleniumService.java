@@ -26,6 +26,7 @@ public class SeleniumService {
 
     private final URL seleniumUrl;
     private final String formUrl;
+    private final Long formTimeoutSec;
     private final DesiredCapabilities desiredCapabilities;
     private final LogEntriesToNetworkLogsConverter logEntriesToNetworkLogsConverter;
 
@@ -83,7 +84,7 @@ public class SeleniumService {
     }
 
     private void fillAndSendPaymentRequest(RemoteWebDriver driver, FormDataRequest.Card card) {
-        WebElement cardNumInput = new WebDriverWait(driver, 10L).until(
+        WebElement cardNumInput = new WebDriverWait(driver, formTimeoutSec).until(
                 ExpectedConditions.visibilityOfElementLocated(By.ById.id("card-number-input")));
         cardNumInput.sendKeys(card.getPan());
         driver.findElementById("expire-date-input").sendKeys(card.getExpiration());
@@ -91,6 +92,8 @@ public class SeleniumService {
         driver.findElementById("card-holder-input").sendKeys("Ivan Ivanov");
         driver.findElementById("email-input").sendKeys("test@test.com");
         driver.findElementById("pay-btn").click();
+        new WebDriverWait(driver, formTimeoutSec).until(
+                ExpectedConditions.visibilityOfElementLocated(By.ById.id("success-icon")));
     }
 
     private Double castToDouble(Object object) {

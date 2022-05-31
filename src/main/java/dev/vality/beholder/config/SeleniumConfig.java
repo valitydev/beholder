@@ -34,8 +34,9 @@ public class SeleniumConfig {
             throws MalformedURLException {
         URL lambdaTestUrl = buildLambdaTestUrl(seleniumProperties.getLambdaTest());
         String formUrl = paymentsProperties.getFormUrl();
+        Long formTimeoutSec = paymentsProperties.getFormTimeoutSec();
         DesiredCapabilities desiredCapabilities = SeleniumUtil.getLambdaTestCapabilities();
-        return new SeleniumService(lambdaTestUrl, formUrl, desiredCapabilities, converter);
+        return new SeleniumService(lambdaTestUrl, formUrl, formTimeoutSec, desiredCapabilities, converter);
     }
 
     @Bean(name = "remoteFormService")
@@ -46,8 +47,9 @@ public class SeleniumConfig {
             throws MalformedURLException {
         URL seleniumUrl = new URL(seleniumProperties.getUrl() + ":" + seleniumProperties.getPort());
         String formUrl = paymentsProperties.getFormUrl();
+        Long formTimeoutSec = paymentsProperties.getFormTimeoutSec();
         DesiredCapabilities desiredCapabilities = SeleniumUtil.getCommonCapabilities();
-        return new SeleniumService(seleniumUrl, formUrl, desiredCapabilities, converter);
+        return new SeleniumService(seleniumUrl, formUrl, formTimeoutSec, desiredCapabilities, converter);
     }
 
     @Bean
