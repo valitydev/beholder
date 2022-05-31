@@ -1,0 +1,37 @@
+{
+  "message": {
+    "method": "Network.requestWillBeSent",
+    "params": {
+      "documentURL": "https://checkout.test.com/v1/checkout.html?test_token=sample_token",
+      "frameId": "142FDA4010363970DE1DED0689086616",
+      "hasUserGesture": false,
+      "initiator": {
+        "type": "parser",
+        "url": "https://checkout.test.com/v1/aeee2b0f52d9e4fffb4e.css"
+      },
+      "loaderId": "A7EB9BE4EDAD0AFA88AB6E16CA26ECAD",
+      "redirectHasExtraInfo": false,
+      "request": {
+        "headers": {
+          "Origin": "https://checkout.test.com",
+          "Referer": "https://checkout.test.com/v1/aeee2b0f52d9e4fffb4e.css",
+          "User-Agent": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36",
+          "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"101\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Linux\""
+        },
+        "initialPriority": "VeryHigh",
+        "isSameSite": true,
+        "method": "GET",
+        "mixedContentType": "none",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "url": "https://checkout.test.com/v1/fonts/90d16760.woff2"
+      },
+      "requestId": "325.11",
+      "timestamp": 30884.700929,
+      "type": "Font",
+      "wallTime": 1653919988.713246
+    }
+  },
+  "webview": "142FDA4010363970DE1DED0689086616"
+}

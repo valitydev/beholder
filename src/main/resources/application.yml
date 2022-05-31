@@ -1,0 +1,62 @@
+server:
+  port: '@server.port@'
+
+management:
+  server:
+    port: '@management.port@'
+  metrics:
+    tags:
+      application: '@project.name@'
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+spring:
+  application:
+    name: '@project.name@'
+  output:
+    ansi:
+      enabled: always
+info:
+  version: '@project.version@'
+  stage: dev
+logging:
+  level:
+    root: INFO
+
+schedule:
+  cron: '0 */5 * * * *' #every 5 minutes
+keycloak:
+  url: http://127.0.0.1
+  user: user
+  password: admin
+  resource: external
+payments:
+  api-url: http://127.0.0.1
+  api-timeout-sec: 30
+  form-url: http://127.0.0.1
+  form-timeout-sec: 30
+  request:
+    shop-id: 1
+    create-shop-if-not-found: true
+    payment-institution-id: 1
+    category-id: 1
+selenium:
+  url: http://127.0.0.1
+  port: 4444
+  use-external-provider: false
+  regions:
+    - BR
+dictionary:
+  regions: classpath:regions.json
