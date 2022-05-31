@@ -12,13 +12,13 @@ import java.util.logging.Level;
 public class SeleniumUtil {
 
     public static final String PERFORMANCE_SCRIPT = """
-            var data = new Array();
+            var map = new Map();
             var navigation = window.performance.getEntriesByType("navigation")[0];
-            data[0] = navigation.requestStart;
-            data[1] = navigation.responseStart;
-            data[2] = navigation.responseEnd;
-            data[3] = navigation.domComplete;
-            return data;""";
+            map.set("requestStart", navigation.requestStart);
+            map.set("responseStart", navigation.responseStart);
+            map.set("responseEnd", navigation.responseEnd);
+            map.set("domComplete", navigation.domComplete);
+            return map;""";
 
     public static DesiredCapabilities getCommonCapabilities() {
         var capabilities = new DesiredCapabilities();

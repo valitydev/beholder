@@ -19,6 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static dev.vality.beholder.util.MetricUtil.castToDouble;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,8 +45,8 @@ public class SeleniumService {
             driver = new RemoteWebDriver(seleniumUrl, capabilities);
             driver.get(prepareParams(formDataRequest));
 
-            //noinspection rawtypes
-            ArrayList performanceMetrics = (ArrayList) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
+            Map<String, Object> performanceMetrics =
+                    (Map<String, Object>) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
             fillAndSendPaymentRequest(driver, formDataRequest.getCardInfo());
 
             LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
@@ -54,10 +57,10 @@ public class SeleniumService {
                     .request(formDataRequest)
                     .formPerformance(
                             FormDataResponse.FormPerformance.builder()
-                                    .requestStartAt(castToDouble(performanceMetrics.get(0)))
-                                    .responseStartAt(castToDouble(performanceMetrics.get(1)))
-                                    .responseEndAt(castToDouble(performanceMetrics.get(2)))
-                                    .domCompletedAt(castToDouble(performanceMetrics.get(3)))
+                                    .requestStartAt(castToDouble(performanceMetrics.get("requestStart")))
+                                    .responseStartAt(castToDouble(performanceMetrics.get("responseStart")))
+                                    .responseEndAt(castToDouble(performanceMetrics.get("responseEnd")))
+                                    .domCompletedAt(castToDouble(performanceMetrics.get("domComplete")))
                                     .build()
                     )
                     .region(region)
@@ -94,18 +97,6 @@ public class SeleniumService {
         driver.findElementById("pay-btn").click();
         new WebDriverWait(driver, formTimeoutSec).until(
                 ExpectedConditions.visibilityOfElementLocated(By.ById.id("success-icon")));
-    }
-
-    private Double castToDouble(Object object) {
-        if (object instanceof Double) {
-            return (Double) object;
-        } else if (object instanceof Long) {
-            return ((Long) object).doubleValue();
-        } else {
-            log.warn("Unable to cast {} to double", object);
-        }
-
-        return Double.NaN;
     }
 
     private String prepareParams(FormDataRequest formDataRequest) {

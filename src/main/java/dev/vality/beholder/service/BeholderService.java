@@ -42,6 +42,5 @@ public class BeholderService {
         }
         metricsService.updateMetrics(responses);
         log.info("Finished processing requests from {} regions", regions);
-
     }
 }
