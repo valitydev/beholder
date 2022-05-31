@@ -28,7 +28,7 @@ public class SeleniumConfig {
 
     @Bean(name = "remoteFormService")
     @ConditionalOnProperty(name = "selenium.use-external-provider", havingValue = "true")
-    public SeleniumService lambdatestRemoteFormService(SeleniumProperties seleniumProperties,
+    public SeleniumService lambdaTestRemoteFormService(SeleniumProperties seleniumProperties,
                                                        PaymentsProperties paymentsProperties,
                                                        LogEntriesToNetworkLogsConverter converter)
             throws MalformedURLException {

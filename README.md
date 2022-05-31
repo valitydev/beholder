@@ -65,4 +65,7 @@ Beholder умеет работать c простым selenium-hub и с [lambda
 ## Полезные ссылки
 
 [Описание метрик производительности](https://developer.mozilla.org/en-US/docs/Web/Performance/Navigation_and_resource_timings), которые можно получить через JS.
+
+[Описание метрик сети](https://chromedevtools.github.io/devtools-protocol/tot/Network/), которые можно получить от chromium'а.
+
 [Регионы](https://www.lambdatest.com/capabilities-generator/), доступные для тестирования. На их основе заполнен справочник ```regions.json```

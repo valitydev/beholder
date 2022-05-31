@@ -2,6 +2,7 @@ package dev.vality.beholder.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class FormDataRequest {
@@ -15,8 +16,10 @@ public class FormDataRequest {
     @Data
     @Builder
     public static class Card {
+        @ToString.Exclude
         private String pan;
         private String expiration;
+        @ToString.Exclude
         private String cvv;
     }
 

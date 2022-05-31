@@ -25,11 +25,18 @@ public class PaymentsService {
     private final InvoicesApi invoicesApi;
     private final ClaimsApi claimsApi;
     private final KeycloakService keycloakService;
-
     private final PaymentsProperties paymentsProperties;
 
     public FormDataRequest prepareFormData() {
         apiClient.setApiKey(keycloakService.getUserToken());
+        String shopId = getShopId();
+        InvoiceParams invoiceParams = PaymentsUtil.createInvoiceParams(shopId);
+        InvoiceAndToken invoiceAndToken = invoicesApi.createInvoice(PaymentsUtil.getRequestId(), invoiceParams,
+                PaymentsUtil.getRequestDeadline(paymentsProperties.getApiTimeoutSec()));
+        return createFormDataRequest(invoiceAndToken);
+    }
+
+    private String getShopId() {
         Party party = partiesApi.getMyParty(PaymentsUtil.getRequestId(),
                 PaymentsUtil.getRequestDeadline(paymentsProperties.getApiTimeoutSec()));
         var request = paymentsProperties.getRequest();
@@ -41,16 +48,16 @@ public class PaymentsService {
             if (!isNotFoundError(httpStatusCodeException) || !request.getCreateShopIfNotFound()) {
                 throw httpStatusCodeException;
             }
-            ClaimChangeset changeset = PaymentsUtil.buildCreateShopClaim(request.getPaymentInstitutionId(),
-                    shopId, request.getCategoryId());
-            claimsApi.createClaim(PaymentsUtil.getRequestId(), changeset,
-                    PaymentsUtil.getRequestDeadline(paymentsProperties.getApiTimeoutSec()));
+            sendShopCreationClaim(request, shopId);
         }
+        return shopId;
+    }
 
-        InvoiceParams invoiceParams = PaymentsUtil.createInvoiceParams(shopId);
-        InvoiceAndToken invoiceAndToken = invoicesApi.createInvoice(PaymentsUtil.getRequestId(), invoiceParams,
+    private void sendShopCreationClaim(PaymentsProperties.Request request, String shopId) {
+        ClaimChangeset changeset = PaymentsUtil.buildCreateShopClaim(request.getPaymentInstitutionId(),
+                shopId, request.getCategoryId());
+        claimsApi.createClaim(PaymentsUtil.getRequestId(), changeset,
                 PaymentsUtil.getRequestDeadline(paymentsProperties.getApiTimeoutSec()));
-        return createFormDataRequest(invoiceAndToken);
     }
 
     private FormDataRequest createFormDataRequest(InvoiceAndToken invoiceAndToken) {

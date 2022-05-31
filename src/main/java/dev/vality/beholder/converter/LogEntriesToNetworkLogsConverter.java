@@ -16,11 +16,10 @@ public class LogEntriesToNetworkLogsConverter implements Converter<List<LogEntry
 
     @Override
     public List<NetworkLog> convert(List<LogEntry> source) {
-        Iterator<LogEntry> iterator = source.iterator();
         Map<String, NetworkLog> networkLogs = new HashMap<>();
-        while (iterator.hasNext()) {
-            LogEntry logEntry = iterator.next();
+        for (LogEntry logEntry : source) {
             try {
+                //Message format doc: https://chromedevtools.github.io/devtools-protocol/tot/Network/
                 JSONObject log = new JSONObject(logEntry.getMessage());
                 JSONObject message = log.getJSONObject("message");
                 JSONObject params = message.getJSONObject("params");
