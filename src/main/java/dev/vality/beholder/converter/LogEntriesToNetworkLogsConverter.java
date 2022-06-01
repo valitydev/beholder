@@ -3,9 +3,9 @@ package dev.vality.beholder.converter;
 import dev.vality.beholder.exception.BadFormatException;
 import dev.vality.beholder.model.NetworkLog;
 import dev.vality.beholder.model.NetworkMethod;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.logging.LogEntry;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
