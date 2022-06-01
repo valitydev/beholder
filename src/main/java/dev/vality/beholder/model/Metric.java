@@ -34,12 +34,6 @@ public enum Metric {
             "beholder_form_loading_requests",
             "Total requests for form upload",
             MetricUnit.TOTAL.getUnit()
-    ),
-
-    FORM_LOADING_REQUESTS_FAILED(
-            "beholder_form_loading_requests_failed",
-            "Total failed requests for form upload",
-            MetricUnit.TOTAL.getUnit()
     );
 
 

@@ -24,8 +24,6 @@ public class MetricsService {
     private final MultiGauge formDataReceivingDuration;
     private final MultiGauge formDomCompleteDuration;
     private final Map<String, Counter> formLoadingCounters;
-    private final Map<String, Counter> formLoadingFailedCounters;
-
 
     public MetricsService(MeterRegistry meterRegistry) {
 
@@ -53,8 +51,6 @@ public class MetricsService {
 
         this.formLoadingCounters = new HashMap<>();
 
-        this.formLoadingFailedCounters = new HashMap<>();
-
     }
 
     public void updateMetrics(List<FormDataResponse> formDataResponses) {
@@ -64,7 +60,6 @@ public class MetricsService {
         updateFormDomCompleteDuration(formDataResponses);
         updateResourceLoadingDuration(formDataResponses);
         updateFormLoadingRequestsTotal(formDataResponses);
-        updateFormLoadingFailedRequestsTotal(formDataResponses);
         log.debug("Updating beholder metrics finished");
     }
 
@@ -106,31 +101,17 @@ public class MetricsService {
 
     private void updateFormLoadingRequestsTotal(List<FormDataResponse> formDataResponses) {
         for (FormDataResponse response : formDataResponses) {
+            Tags tags = MetricUtil.createCommonTags(response)
+                    .and("result", response.isFailed() ? "failure" : "success");
             String id = MetricUtil.getCounterId(response);
             Counter counter = formLoadingCounters.getOrDefault(id,
                     Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
                             .description(Metric.FORM_LOADING_REQUESTS.getDescription())
-                            .tags(MetricUtil.createCommonTags(response))
+                            .tags(tags)
                             .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
                             .register(meterRegistry));
             counter.increment();
             formLoadingCounters.put(id, counter);
-        }
-    }
-
-    private void updateFormLoadingFailedRequestsTotal(List<FormDataResponse> formDataResponses) {
-        for (FormDataResponse response : formDataResponses) {
-            if (response.isFailed()) {
-                String id = MetricUtil.getCounterId(response);
-                Counter counter = formLoadingFailedCounters.getOrDefault(id,
-                        Counter.builder(Metric.FORM_LOADING_REQUESTS_FAILED.getName())
-                                .description(Metric.FORM_LOADING_REQUESTS_FAILED.getDescription())
-                                .tags(MetricUtil.createCommonTags(response))
-                                .baseUnit(Metric.FORM_LOADING_REQUESTS_FAILED.getUnit())
-                                .register(meterRegistry));
-                counter.increment();
-                formLoadingFailedCounters.put(id, counter);
-            }
         }
     }
 
