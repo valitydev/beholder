@@ -101,18 +101,24 @@ public class MetricsService {
 
     private void updateFormLoadingRequestsTotal(List<FormDataResponse> formDataResponses) {
         for (FormDataResponse response : formDataResponses) {
-            Tags tags = MetricUtil.createCommonTags(response)
-                    .and("result", response.isFailed() ? "failure" : "success");
+            Tags tags = MetricUtil.createCommonTags(response);
             String id = MetricUtil.getCounterId(response);
-            Counter counter = formLoadingCounters.getOrDefault(id,
-                    Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
-                            .description(Metric.FORM_LOADING_REQUESTS.getDescription())
-                            .tags(tags)
-                            .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
-                            .register(meterRegistry));
-            counter.increment();
-            formLoadingCounters.put(id, counter);
+            incrementFormLoadingCounter(id, tags);
+            if (response.isFailed()) {
+                incrementFormLoadingCounter(id, tags.and("result", "failure"));
+            }
         }
+    }
+
+    private void incrementFormLoadingCounter(String id, Tags tags) {
+        Counter counter = formLoadingCounters.getOrDefault(id,
+                Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
+                        .description(Metric.FORM_LOADING_REQUESTS.getDescription())
+                        .tags(tags)
+                        .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
+                        .register(meterRegistry));
+        counter.increment();
+        formLoadingCounters.put(id, counter);
     }
 
     private void updateResourceLoadingDuration(List<FormDataResponse> formDataResponses) {
