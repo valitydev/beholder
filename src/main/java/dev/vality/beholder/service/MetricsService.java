@@ -1,6 +1,7 @@
 package dev.vality.beholder.service;
 
 import dev.vality.beholder.model.FormDataResponse;
+import dev.vality.beholder.model.Metric;
 import dev.vality.beholder.util.MetricUtil;
 import io.micrometer.core.instrument.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static dev.vality.beholder.model.MetricUnit.MILLIS;
-import static dev.vality.beholder.model.MetricUnit.TOTAL;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -32,24 +31,24 @@ public class MetricsService {
 
         this.meterRegistry = meterRegistry;
 
-        this.resourcesLoadingTimings = MultiGauge.builder("beholder_form_resource_loading_duration")
-                .description("Resources uploading time")
-                .baseUnit(MILLIS.getUnit())
+        this.resourcesLoadingTimings = MultiGauge.builder(Metric.RESOURCE_LOADING_DURATION.getName())
+                .description(Metric.RESOURCE_LOADING_DURATION.getDescription())
+                .baseUnit(Metric.RESOURCE_LOADING_DURATION.getUnit())
                 .register(meterRegistry);
 
-        this.formDataWaitingDurationGauges = MultiGauge.builder("beholder_form_waiting_response_duration")
-                .description("Time between sending request and first received byte of data")
-                .baseUnit(MILLIS.getUnit())
+        this.formDataWaitingDurationGauges = MultiGauge.builder(Metric.WAITING_RESPONSE_DURATION.getName())
+                .description(Metric.WAITING_RESPONSE_DURATION.getDescription())
+                .baseUnit(Metric.WAITING_RESPONSE_DURATION.getUnit())
                 .register(meterRegistry);
 
-        this.formDataReceivingDuration = MultiGauge.builder("beholder_form_receiving_response_duration")
-                .description("Time between receiving first and last byte of data")
-                .baseUnit(MILLIS.getUnit())
+        this.formDataReceivingDuration = MultiGauge.builder(Metric.RECEIVING_RESPONSE_DURATION.getName())
+                .description(Metric.RECEIVING_RESPONSE_DURATION.getDescription())
+                .baseUnit(Metric.RECEIVING_RESPONSE_DURATION.getUnit())
                 .register(meterRegistry);
 
-        this.formDomCompleteDuration = MultiGauge.builder("beholder_form_dom_complete_duration")
-                .description("Time between sending request and fully rendered DOM")
-                .baseUnit(MILLIS.getUnit())
+        this.formDomCompleteDuration = MultiGauge.builder(Metric.DOM_COMPLETE_DURATION.getName())
+                .description(Metric.DOM_COMPLETE_DURATION.getDescription())
+                .baseUnit(Metric.DOM_COMPLETE_DURATION.getUnit())
                 .register(meterRegistry);
 
         this.formLoadingCounters = new HashMap<>();
@@ -109,10 +108,10 @@ public class MetricsService {
         for (FormDataResponse response : formDataResponses) {
             String id = MetricUtil.getCounterId(response);
             Counter counter = formLoadingCounters.getOrDefault(id,
-                    Counter.builder("beholder_form_loading_requests")
-                            .description("Total requests for form upload")
+                    Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
+                            .description(Metric.FORM_LOADING_REQUESTS.getDescription())
                             .tags(MetricUtil.createCommonTags(response))
-                            .baseUnit(TOTAL.getUnit())
+                            .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
                             .register(meterRegistry));
             counter.increment();
             formLoadingCounters.put(id, counter);
@@ -124,10 +123,10 @@ public class MetricsService {
             if (response.isFailed()) {
                 String id = MetricUtil.getCounterId(response);
                 Counter counter = formLoadingFailedCounters.getOrDefault(id,
-                        Counter.builder("beholder_form_loading_requests_failed")
-                                .description("Total failed requests for form upload")
+                        Counter.builder(Metric.FORM_LOADING_REQUESTS_FAILED.getName())
+                                .description(Metric.FORM_LOADING_REQUESTS_FAILED.getDescription())
                                 .tags(MetricUtil.createCommonTags(response))
-                                .baseUnit(TOTAL.getUnit())
+                                .baseUnit(Metric.FORM_LOADING_REQUESTS_FAILED.getUnit())
                                 .register(meterRegistry));
                 counter.increment();
                 formLoadingFailedCounters.put(id, counter);
