@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.vality.beholder.util.MetricUtil.castToDouble;
+
 @Slf4j
 @RequiredArgsConstructor
 public class SeleniumService {
@@ -94,18 +96,6 @@ public class SeleniumService {
         driver.findElementById("pay-btn").click();
         new WebDriverWait(driver, formTimeoutSec).until(
                 ExpectedConditions.visibilityOfElementLocated(By.ById.id("success-icon")));
-    }
-
-    private Double castToDouble(Object object) {
-        if (object instanceof Double) {
-            return (Double) object;
-        } else if (object instanceof Long) {
-            return ((Long) object).doubleValue();
-        } else {
-            log.warn("Unable to cast {} to double", object);
-        }
-
-        return Double.NaN;
     }
 
     private String prepareParams(FormDataRequest formDataRequest) {

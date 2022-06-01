@@ -52,7 +52,15 @@ public class MetricUtil {
                 "region", formDataResponse.getRegion().getCode());
     }
 
-    public String getCounterId(FormDataResponse formDataResponse) {
-        return String.join("_", formDataResponse.getBrowser().name(), formDataResponse.getRegion().getCountry());
+    public static Double castToDouble(Object object) {
+        if (object instanceof Double) {
+            return (Double) object;
+        } else if (object instanceof Long) {
+            return ((Long) object).doubleValue();
+        } else {
+            log.warn("Unable to cast {} to double", object);
+        }
+
+        return Double.NaN;
     }
 }
