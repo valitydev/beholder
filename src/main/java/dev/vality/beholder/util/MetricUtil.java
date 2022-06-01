@@ -52,10 +52,6 @@ public class MetricUtil {
                 "region", formDataResponse.getRegion().getCode());
     }
 
-    public String getCounterId(FormDataResponse formDataResponse) {
-        return String.join("_", formDataResponse.getBrowser().name(), formDataResponse.getRegion().getCountry());
-    }
-
     public static Double castToDouble(Object object) {
         if (object instanceof Double) {
             return (Double) object;

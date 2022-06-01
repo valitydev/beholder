@@ -38,14 +38,13 @@ Beholder умеет работать c простым selenium-hub и с [lambda
 
 #### Метрики
 
-| Название                                         | Лейблы          | Описание                                                                     |
-|--------------------------------------------------|-----------------|------------------------------------------------------------------------------|
-| beholder_form_loading_requests_total             | browser, region | счетчик запросов на загрузку формы                                           |
-| beholder_form_loading_failed_total               | browser, region | счетчик неудачных загрузок формы                                             |
-| beholder_form_dom_complete_duration_millis       | browser, region | время от момента отправки запроса до полной загрузки формы в миллисекундах   |
-| beholder_form_waiting_response_duration_millis   | browser, region | время от момента отправки запроса до начала получения ответа в миллисекундах |
-| beholder_form_receiving_response_duration_millis | browser, region | время между получением первым и последним байтом информации в миллисекундах  |
-| beholder_form_resource_loading_duration_millis   | browser, region | время, затраченное на загрузку ресурса (включая блокировки, ожидание и т.д)  |
+| Название                                         | Лейблы                     | Описание                                                                     |
+|--------------------------------------------------|----------------------------|------------------------------------------------------------------------------|
+| beholder_form_loading_requests_total             | browser, region, result    | счетчик запросов на загрузку формы                                           |
+| beholder_form_dom_complete_duration_millis       | browser, region            | время от момента отправки запроса до полной загрузки формы в миллисекундах   |
+| beholder_form_waiting_response_duration_millis   | browser, region            | время от момента отправки запроса до начала получения ответа в миллисекундах |
+| beholder_form_receiving_response_duration_millis | browser, region            | время между получением первым и последним байтом информации в миллисекундах  |
+| beholder_form_resource_loading_duration_millis   | browser, region, resource  | время, затраченное на загрузку ресурса (включая блокировки, ожидание и т.д)  |
 
 ## Тестирование
 

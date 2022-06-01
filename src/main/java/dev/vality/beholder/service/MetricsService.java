@@ -7,9 +7,7 @@ import io.micrometer.core.instrument.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -23,7 +21,6 @@ public class MetricsService {
     private final MultiGauge formDataWaitingDurationGauges;
     private final MultiGauge formDataReceivingDuration;
     private final MultiGauge formDomCompleteDuration;
-    private final Map<String, Counter> formLoadingCounters;
 
     public MetricsService(MeterRegistry meterRegistry) {
 
@@ -48,8 +45,6 @@ public class MetricsService {
                 .description(Metric.DOM_COMPLETE_DURATION.getDescription())
                 .baseUnit(Metric.DOM_COMPLETE_DURATION.getUnit())
                 .register(meterRegistry);
-
-        this.formLoadingCounters = new HashMap<>();
 
     }
 
@@ -102,23 +97,17 @@ public class MetricsService {
     private void updateFormLoadingRequestsTotal(List<FormDataResponse> formDataResponses) {
         for (FormDataResponse response : formDataResponses) {
             Tags tags = MetricUtil.createCommonTags(response);
-            String id = MetricUtil.getCounterId(response);
-            incrementFormLoadingCounter(id, tags);
-            if (response.isFailed()) {
-                incrementFormLoadingCounter(id, tags.and("result", "failure"));
-            }
+            incrementFormLoadingCounter(tags.and("result", response.isFailed() ? "failure" : "success"));
         }
     }
 
-    private void incrementFormLoadingCounter(String id, Tags tags) {
-        Counter counter = formLoadingCounters.getOrDefault(id,
-                Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
-                        .description(Metric.FORM_LOADING_REQUESTS.getDescription())
-                        .tags(tags)
-                        .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
-                        .register(meterRegistry));
-        counter.increment();
-        formLoadingCounters.put(id, counter);
+    private void incrementFormLoadingCounter(Tags tags) {
+        Counter.builder(Metric.FORM_LOADING_REQUESTS.getName())
+                .description(Metric.FORM_LOADING_REQUESTS.getDescription())
+                .tags(tags)
+                .baseUnit(Metric.FORM_LOADING_REQUESTS.getUnit())
+                .register(meterRegistry)
+                .increment();
     }
 
     private void updateResourceLoadingDuration(List<FormDataResponse> formDataResponses) {
