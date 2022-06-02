@@ -11,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -30,7 +29,7 @@ public class KeycloakService {
         ResponseEntity<String> response =
                 restTemplate.postForEntity(keycloakProperties.getUrl(), request, String.class);
 
-        if(!response.getStatusCode().is2xxSuccessful()) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
             throw new BadResponseException(
                     String.format("Keycloak response: code: %s, body: %s", response.getStatusCode(),
                             response.getBody()));
