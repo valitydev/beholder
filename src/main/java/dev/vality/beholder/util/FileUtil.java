@@ -15,7 +15,7 @@ public class FileUtil {
     public static List<Region> readRegions(Resource resource) throws IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
-                resource.getFile(),
+                resource.getInputStream(),
                 new TypeReference<>() {
                 });
     }
