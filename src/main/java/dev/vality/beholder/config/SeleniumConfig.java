@@ -35,7 +35,8 @@ public class SeleniumConfig {
         URL lambdaTestUrl = buildLambdaTestUrl(seleniumProperties.getLambdaTest());
         String formUrl = paymentsProperties.getFormUrl();
         Long formTimeoutSec = paymentsProperties.getFormTimeoutSec();
-        DesiredCapabilities desiredCapabilities = SeleniumUtil.getLambdaTestCapabilities();
+        DesiredCapabilities desiredCapabilities =
+                SeleniumUtil.getLambdaTestCapabilities(seleniumProperties.getLambdaTest());
         return new SeleniumService(lambdaTestUrl, formUrl, formTimeoutSec, desiredCapabilities, converter);
     }
 

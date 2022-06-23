@@ -1,5 +1,6 @@
 package dev.vality.beholder.util;
 
+import dev.vality.beholder.config.properties.SeleniumProperties;
 import lombok.experimental.UtilityClass;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -29,12 +30,14 @@ public class SeleniumUtil {
         return capabilities;
     }
 
-    public static DesiredCapabilities getLambdaTestCapabilities() {
+    public static DesiredCapabilities getLambdaTestCapabilities(SeleniumProperties.LambdaTestProperties lambdaTest) {
         var capabilities = getCommonCapabilities();
         capabilities.setCapability("network", false);
         capabilities.setCapability("visual", false);
         capabilities.setCapability("video", false);
         capabilities.setCapability("console", false);
+        capabilities.setCapability("user", lambdaTest.getUser());
+        capabilities.setCapability("accessKey", lambdaTest.getToken());
         return capabilities;
     }
 }
