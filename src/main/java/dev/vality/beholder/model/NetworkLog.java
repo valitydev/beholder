@@ -13,4 +13,6 @@ public class NetworkLog {
 
     private Double end;
 
+    private String method;
+
 }

@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
                 "payments.request.create-shop-if-not-found=true",
                 "payments.request.payment-institution-id=1",
                 "payments.request.category-id=1",
+                "selenium.regions=BR",
                 "management.server.port="})
 public class BeholderFullTest {
 

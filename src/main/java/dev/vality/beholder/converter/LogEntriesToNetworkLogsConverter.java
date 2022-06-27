@@ -28,12 +28,14 @@ public class LogEntriesToNetworkLogsConverter implements Converter<List<LogEntry
                     String method = message.getString("method");
                     if (NetworkMethod.REQUEST_WILL_BE_SENT.getValue().equals(method)) {
                         double time = params.getDouble("timestamp") * 1000;
-                        String resource = params.getJSONObject("request").getString("url");
-                        networkLogs.put(requestId, new NetworkLog(resource, time, null));
+                        JSONObject request = params.getJSONObject("request");
+                        String httpMethod = request.getString("method");
+                        String resource = request.getString("url");
+                        networkLogs.put(requestId, new NetworkLog(resource, time, null, httpMethod));
                     } else if (NetworkMethod.LOADING_FINISHED.getValue().equals(method)) {
                         double time = params.getDouble("timestamp") * 1000;
                         NetworkLog networkLog =
-                                networkLogs.getOrDefault(requestId, new NetworkLog(requestId, null, null));
+                                networkLogs.getOrDefault(requestId, new NetworkLog(requestId, null, null, null));
                         networkLog.setEnd(time);
                     }
                 }

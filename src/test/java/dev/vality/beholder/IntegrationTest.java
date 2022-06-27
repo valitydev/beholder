@@ -1,14 +1,12 @@
 package dev.vality.beholder;
 
 import dev.vality.beholder.config.properties.SeleniumProperties;
-import dev.vality.beholder.security.KeycloakService;
 import dev.vality.beholder.service.BeholderService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +22,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static dev.vality.beholder.testutil.SystemUtil.isArmArchitecture;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @Disabled("Used only for local testing")
@@ -33,12 +30,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"beholder.cron=-", //disables scheduled execution
-                "payments.api-url=https://api.test.com",
-                "payments.form-url=https://checkout.test.com/checkout.html",
-                "payments.request.shop-id=test", "management.server.port="})
+                "selenium.use-external-provider=false",
+                "payments.api-url=https://api.vality.dev/",
+                "payments.form-url=https://checkout.vality.dev/v",
+                "payments.request.shop-id=test",
+                "keycloak.url=https://auth.vality.dev/",
+                "keycloak.user=test",
+                "keycloak.password=test",
+                "keycloak.resource=test",
+                "management.server.port="})
 public class IntegrationTest {
-
-    public static final String TEST_USER_TOKEN = "test_token";
 
     public static final String SELENIUM_IMAGE_NAME =
             (isArmArchitecture() ? "seleniarm" : "selenium") + "/standalone-chromium";
@@ -63,9 +64,6 @@ public class IntegrationTest {
     @Autowired
     public BeholderService beholderService;
 
-    @MockBean
-    private KeycloakService keycloakService;
-
     @Autowired
     public SeleniumProperties seleniumProperties;
 
@@ -78,11 +76,6 @@ public class IntegrationTest {
         SELENIUM_CONTAINER.start();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        verifyNoMoreInteractions(keycloakService);
-    }
-
     @AfterAll
     public static void stop() {
         SELENIUM_CONTAINER.stop();
@@ -90,10 +83,7 @@ public class IntegrationTest {
 
     @Test
     public void test() throws Exception {
-        when(keycloakService.getUserToken()).thenReturn(TEST_USER_TOKEN);
         beholderService.behold();
-        verify(keycloakService, times(1)).getUserToken();
-
 
         var mvcResult = mockMvc.perform(get("/actuator/prometheus"))
                 .andReturn();
