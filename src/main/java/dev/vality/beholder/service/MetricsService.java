@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -111,25 +113,31 @@ public class MetricsService {
     }
 
     private void updateResourceLoadingDuration(List<FormDataResponse> formDataResponses) {
-        formDataResponses.stream()
+        Map<Tags, Double> resourcesStats = convertToResourceLoadingStats(formDataResponses);
+        resourcesLoadingTimings.register(
+                resourcesStats.entrySet().stream().map(networkLogEntry -> MultiGauge.Row.of(
+                                networkLogEntry.getKey(),
+                                networkLogEntry.getValue()))
+                        .collect(toList()),
+                true
+        );
+    }
+
+    private Map<Tags, Double> convertToResourceLoadingStats(List<FormDataResponse> formDataResponses) {
+        return formDataResponses.stream()
                 .filter(Predicate.not(FormDataResponse::isFailed))
-                .forEach(
-                        formDataResponse ->
-                                resourcesLoadingTimings.register(
-                                        formDataResponse.getNetworkLogs().stream()
-                                                .map(networkLog -> MultiGauge.Row.of(
-                                                        MetricUtil.createCommonTags(formDataResponse)
-                                                                .and("resource",
-                                                                        MetricUtil.getNormalisedPath(networkLog,
-                                                                                formDataResponse.getRequest()
-                                                                                        .getInvoiceId(),
-                                                                                formDataResponse.getRequest()
-                                                                                        .getInvoiceAccessToken())),
-                                                        MetricUtil.calculateRequestDuration(networkLog)))
-                                                .collect(toList()),
-                                        true
-                                )
-                );
+                .flatMap(formDataResponse ->
+                        formDataResponse.getNetworkLogs().stream()
+                                .map(networkLog -> Map.entry(MetricUtil.createCommonTags(formDataResponse)
+                                                .and("resource",
+                                                        MetricUtil.getNormalisedPath(networkLog,
+                                                                formDataResponse.getRequest()
+                                                                        .getInvoiceId(),
+                                                                formDataResponse.getRequest()
+                                                                        .getInvoiceAccessToken()))
+                                                .and("method", networkLog.getMethod()),
+                                        MetricUtil.calculateRequestDuration(networkLog))))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }
