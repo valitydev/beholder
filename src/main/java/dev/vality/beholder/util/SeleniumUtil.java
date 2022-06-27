@@ -32,10 +32,10 @@ public class SeleniumUtil {
 
     public static DesiredCapabilities getLambdaTestCapabilities(SeleniumProperties.LambdaTestProperties lambdaTest) {
         var capabilities = getCommonCapabilities();
-        capabilities.setCapability("network", lambdaTest.getNetwork());
-        capabilities.setCapability("visual", lambdaTest.getVisual());
-        capabilities.setCapability("video", lambdaTest.getVideo());
-        capabilities.setCapability("console", lambdaTest.getConsole());
+        capabilities.setCapability("network", lambdaTest.getEnableNetwork());
+        capabilities.setCapability("visual", lambdaTest.getEnableVisual());
+        capabilities.setCapability("video", lambdaTest.getEnableVideo());
+        capabilities.setCapability("console", lambdaTest.getEnableConsole());
         capabilities.setCapability("user", lambdaTest.getUser());
         capabilities.setCapability("accessKey", lambdaTest.getToken());
         return capabilities;
