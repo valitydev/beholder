@@ -38,6 +38,14 @@ public class SeleniumProperties {
         private String user;
 
         private String token;
+
+        private Boolean network;
+
+        private Boolean visual;
+
+        private Boolean video;
+
+        private Boolean console;
     }
 
     @AssertTrue(message = "Check 'use-external-provider' option and related parameters")
