@@ -12,21 +12,9 @@ public enum Metric {
             MetricUnit.MILLIS.getUnit()
     ),
 
-    WAITING_RESPONSE_DURATION(
-            "beholder_form_waiting_response_duration",
-            "Time between sending request and first received byte of data",
-            MetricUnit.MILLIS.getUnit()
-    ),
-
-    RECEIVING_RESPONSE_DURATION(
-            "beholder_form_receiving_response_duration",
-            "Time between receiving first and last byte of data",
-            MetricUnit.MILLIS.getUnit()
-    ),
-
-    DOM_COMPLETE_DURATION(
-            "beholder_form_dom_complete_duration",
-            "Time between sending request and fully rendered DOM",
+    PERFORMANCE_TIMINGS(
+            "beholder_form_performance_timing_duration",
+            "Navigation and resource timings received via Javascript",
             MetricUnit.MILLIS.getUnit()
     ),
 

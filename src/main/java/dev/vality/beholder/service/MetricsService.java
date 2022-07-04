@@ -3,10 +3,14 @@ package dev.vality.beholder.service;
 import dev.vality.beholder.model.FormDataResponse;
 import dev.vality.beholder.model.Metric;
 import dev.vality.beholder.util.MetricUtil;
-import io.micrometer.core.instrument.*;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.MultiGauge;
+import io.micrometer.core.instrument.Tags;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -20,9 +24,7 @@ public class MetricsService {
 
     private final MeterRegistry meterRegistry;
     private final MultiGauge resourcesLoadingTimings;
-    private final MultiGauge formDataWaitingDurationGauges;
-    private final MultiGauge formDataReceivingDuration;
-    private final MultiGauge formDomCompleteDuration;
+    private final MultiGauge formDataPerformanceTimings;
 
     public MetricsService(MeterRegistry meterRegistry) {
 
@@ -33,67 +35,49 @@ public class MetricsService {
                 .baseUnit(Metric.RESOURCE_LOADING_DURATION.getUnit())
                 .register(meterRegistry);
 
-        this.formDataWaitingDurationGauges = MultiGauge.builder(Metric.WAITING_RESPONSE_DURATION.getName())
-                .description(Metric.WAITING_RESPONSE_DURATION.getDescription())
-                .baseUnit(Metric.WAITING_RESPONSE_DURATION.getUnit())
-                .register(meterRegistry);
-
-        this.formDataReceivingDuration = MultiGauge.builder(Metric.RECEIVING_RESPONSE_DURATION.getName())
-                .description(Metric.RECEIVING_RESPONSE_DURATION.getDescription())
-                .baseUnit(Metric.RECEIVING_RESPONSE_DURATION.getUnit())
-                .register(meterRegistry);
-
-        this.formDomCompleteDuration = MultiGauge.builder(Metric.DOM_COMPLETE_DURATION.getName())
-                .description(Metric.DOM_COMPLETE_DURATION.getDescription())
-                .baseUnit(Metric.DOM_COMPLETE_DURATION.getUnit())
+        this.formDataPerformanceTimings = MultiGauge.builder(Metric.PERFORMANCE_TIMINGS.getName())
+                .description(Metric.PERFORMANCE_TIMINGS.getDescription())
+                .baseUnit(Metric.PERFORMANCE_TIMINGS.getUnit())
                 .register(meterRegistry);
 
     }
 
     public void updateMetrics(List<FormDataResponse> formDataResponses) {
         log.debug("Updating beholder metrics started");
-        updateWaitingResponseDuration(formDataResponses);
-        updateFormDataReceivingDuration(formDataResponses);
-        updateFormDomCompleteDuration(formDataResponses);
+        updatePerformanceTimings(formDataResponses);
         updateResourceLoadingDuration(formDataResponses);
         updateFormLoadingRequestsTotal(formDataResponses);
         log.debug("Updating beholder metrics finished");
     }
 
-    private void updateWaitingResponseDuration(List<FormDataResponse> formDataResponses) {
-        formDataWaitingDurationGauges.register(
-                formDataResponses.stream()
-                        .filter(Predicate.not(FormDataResponse::isFailed))
-                        .map(formDataResponse -> MultiGauge.Row.of(
-                                MetricUtil.createCommonTags(formDataResponse),
-                                MetricUtil.calculateWaitingResponseDuration(formDataResponse.getFormPerformance())))
+    private void updatePerformanceTimings(List<FormDataResponse> formDataResponses) {
+        Map<Tags, Double> perfTimingsStats = convertToPerformanceTimingsStats(formDataResponses);
+        formDataPerformanceTimings.register(
+                perfTimingsStats.entrySet().stream().map(networkLogEntry -> MultiGauge.Row.of(
+                                networkLogEntry.getKey(),
+                                networkLogEntry.getValue()))
                         .collect(toList()),
                 true
         );
     }
 
-    private void updateFormDataReceivingDuration(List<FormDataResponse> formDataResponses) {
-        formDataReceivingDuration.register(
-                formDataResponses.stream()
-                        .filter(Predicate.not(FormDataResponse::isFailed))
-                        .map(formDataResponse -> MultiGauge.Row.of(
-                                MetricUtil.createCommonTags(formDataResponse),
-                                MetricUtil.calculateDataReceivingDuration(formDataResponse.getFormPerformance())))
-                        .collect(toList()),
-                true
-        );
-    }
-
-    private void updateFormDomCompleteDuration(List<FormDataResponse> formDataResponses) {
-        formDomCompleteDuration.register(
-                formDataResponses.stream()
-                        .filter(Predicate.not(FormDataResponse::isFailed))
-                        .map(formDataResponse -> MultiGauge.Row.of(
-                                MetricUtil.createCommonTags(formDataResponse),
-                                MetricUtil.calculateDomCompleteDuration(formDataResponse.getFormPerformance())))
-                        .collect(toList()),
-                true
-        );
+    private Map<Tags, Double> convertToPerformanceTimingsStats(List<FormDataResponse> formDataResponses) {
+        return formDataResponses.stream()
+                .filter(Predicate.not(FormDataResponse::isFailed))
+                .flatMap(formDataResponse ->
+                        Arrays.stream(formDataResponse.getFormPerformance().getClass().getDeclaredFields())
+                                .map(field -> {
+                                    field.setAccessible(true);
+                                    try {
+                                        String name = field.getName();
+                                        Double value = (Double) field.get(formDataResponse.getFormPerformance());
+                                        return Map.entry(MetricUtil.createCommonTags(formDataResponse)
+                                                .and("performanceTiming", name), value);
+                                    } catch (IllegalAccessException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private void updateFormLoadingRequestsTotal(List<FormDataResponse> formDataResponses) {

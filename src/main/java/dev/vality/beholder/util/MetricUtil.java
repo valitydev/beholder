@@ -24,18 +24,6 @@ public class MetricUtil {
         return calculateDiff(networkLog.getStart(), networkLog.getEnd());
     }
 
-    public static double calculateWaitingResponseDuration(FormDataResponse.FormPerformance performance) {
-        return calculateDiff(performance.getRequestStartAt(), performance.getResponseStartAt());
-    }
-
-    public static double calculateDataReceivingDuration(FormDataResponse.FormPerformance performance) {
-        return calculateDiff(performance.getResponseStartAt(), performance.getResponseEndAt());
-    }
-
-    public static double calculateDomCompleteDuration(FormDataResponse.FormPerformance performance) {
-        return calculateDiff(performance.getRequestStartAt(), performance.getDomCompletedAt());
-    }
-
     private static double calculateDiff(Double from, Double to) {
         if (isNumber(from) && isNumber(to)) {
             return Math.round(to - from);

@@ -62,9 +62,23 @@ public class ResponseUtil {
         var responseEndAt = responseStartAt + 5;
 
         FormDataResponse.FormPerformance performance = FormDataResponse.FormPerformance.builder()
-                .requestStartAt(requestStartAt)
-                .responseStartAt(responseStartAt)
-                .responseEndAt(responseEndAt).build();
+                .redirectStart(Double.NaN)
+                .redirectEnd(Double.NaN)
+                .fetchStart(Double.NaN)
+                .domainLookupStart(Double.NaN)
+                .domainLookupEnd(Double.NaN)
+                .connectStart(Double.NaN)
+                .secureConnectionStart(Double.NaN)
+                .connectEnd(Double.NaN)
+                .requestStart(requestStartAt)
+                .responseStart(responseStartAt)
+                .responseEnd(responseEndAt)
+                .domInteractive(Double.NaN)
+                .domContentLoadedEventStart(Double.NaN)
+                .domContentLoadedEventEnd(Double.NaN)
+                .domComplete(Double.NaN)
+                .loadEventStart(Double.NaN)
+                .build();
 
         return FormDataResponse.builder()
                 .region(region)

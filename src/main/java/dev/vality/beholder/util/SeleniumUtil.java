@@ -15,10 +15,22 @@ public class SeleniumUtil {
     public static final String PERFORMANCE_SCRIPT = """
             var data = new Array();
             var navigation = window.performance.getEntriesByType("navigation")[0];
-            data[0] = navigation.requestStart;
-            data[1] = navigation.responseStart;
-            data[2] = navigation.responseEnd;
-            data[3] = navigation.domComplete;
+            data[0] = navigation.redirectStart;
+            data[1] = navigation.redirectEnd;
+            data[2] = navigation.fetchStart;
+            data[3] = navigation.domainLookupStart;
+            data[4] = navigation.domainLookupEnd;
+            data[5] = navigation.connectStart;
+            data[6] = navigation.secureConnectionStart;
+            data[7] = navigation.connectEnd;
+            data[8] = navigation.requestStart;
+            data[9] = navigation.responseStart;
+            data[10] = navigation.responseEnd;
+            data[11] = navigation.domInteractive;
+            data[12] = navigation.domContentLoadedEventStart;
+            data[13] = navigation.domContentLoadedEventEnd;
+            data[14] = navigation.domComplete;
+            data[15] = navigation.loadEventStart;
             return data;""";
 
     public static DesiredCapabilities getCommonCapabilities() {

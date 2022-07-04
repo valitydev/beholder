@@ -24,15 +24,22 @@ public class FormDataResponse {
     @Data
     @Builder
     public static class FormPerformance {
-
-        private Double requestStartAt;
-
-        private Double responseStartAt;
-
-        private Double responseEndAt;
-
-        private Double domCompletedAt;
-
+        private Double redirectStart;
+        private Double redirectEnd;
+        private Double fetchStart;
+        private Double domainLookupStart;
+        private Double domainLookupEnd;
+        private Double connectStart;
+        private Double secureConnectionStart;
+        private Double connectEnd;
+        private Double requestStart;
+        private Double responseStart;
+        private Double responseEnd;
+        private Double domInteractive;
+        private Double domContentLoadedEventStart;
+        private Double domContentLoadedEventEnd;
+        private Double domComplete;
+        private Double loadEventStart;
     }
 
 }
