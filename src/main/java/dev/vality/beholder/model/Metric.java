@@ -12,9 +12,9 @@ public enum Metric {
             MetricUnit.MILLIS.getUnit()
     ),
 
-    PERFORMANCE_TIMINGS(
-            "beholder_form_performance_timing_duration",
-            "Navigation and resource timings received via Javascript",
+    PERFORMANCE_TIMING_TEMPLATE(
+            "beholder_form_performance_timing_%s",
+            "%s timing, received from JS navigation and resource timings",
             MetricUnit.MILLIS.getUnit()
     ),
 

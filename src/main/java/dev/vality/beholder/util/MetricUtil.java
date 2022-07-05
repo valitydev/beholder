@@ -6,9 +6,17 @@ import io.micrometer.core.instrument.Tags;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @UtilityClass
 public class MetricUtil {
+
+    public static final List<String> PERFORMANCE_METRICS =
+            List.of("redirectStart", "redirectEnd", "fetchStart", "domainLookupStart", "domainLookupEnd",
+                    "connectStart", "secureConnectionStart", "connectEnd", "requestStart", "responseStart",
+                    "responseEnd", "domInteractive", "domContentLoadedEventStart", "domContentLoadedEventEnd",
+                    "domComplete", "loadEventStart");
 
     public static String getNormalisedPath(NetworkLog networkLog, String invoiceId, String invoiceToken) {
         String path = networkLog.getResource();

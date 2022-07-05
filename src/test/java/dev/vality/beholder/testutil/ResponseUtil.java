@@ -10,6 +10,7 @@ import lombok.experimental.UtilityClass;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @UtilityClass
@@ -61,31 +62,16 @@ public class ResponseUtil {
         var responseStartAt = requestStartAt + 5;
         var responseEndAt = responseStartAt + 5;
 
-        FormDataResponse.FormPerformance performance = FormDataResponse.FormPerformance.builder()
-                .redirectStart(Double.NaN)
-                .redirectEnd(Double.NaN)
-                .fetchStart(Double.NaN)
-                .domainLookupStart(Double.NaN)
-                .domainLookupEnd(Double.NaN)
-                .connectStart(Double.NaN)
-                .secureConnectionStart(Double.NaN)
-                .connectEnd(Double.NaN)
-                .requestStart(requestStartAt)
-                .responseStart(responseStartAt)
-                .responseEnd(responseEndAt)
-                .domInteractive(Double.NaN)
-                .domContentLoadedEventStart(Double.NaN)
-                .domContentLoadedEventEnd(Double.NaN)
-                .domComplete(Double.NaN)
-                .loadEventStart(Double.NaN)
-                .build();
+        Map<String, Object> performanceMetrics = Map.of("requestStart", requestStartAt,
+                "responseStart", responseStartAt,
+                "responseEnd", responseEndAt);
 
         return FormDataResponse.builder()
                 .region(region)
                 .browser(Browser.CHROME)
                 .request(request)
                 .networkLogs(List.of())
-                .formPerformance(performance)
+                .performanceMetrics(performanceMetrics)
                 .build();
     }
 

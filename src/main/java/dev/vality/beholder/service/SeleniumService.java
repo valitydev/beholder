@@ -17,10 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-
-import static dev.vality.beholder.util.MetricUtil.castToDouble;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,8 +42,8 @@ public class SeleniumService {
             driver = new RemoteWebDriver(seleniumUrl, capabilities);
             driver.get(prepareParams(formDataRequest));
 
-            //noinspection rawtypes
-            ArrayList performanceMetrics = (ArrayList) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
+            Map<String, Object> performanceMetrics =
+                    (Map<String, Object>) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
             fillAndSendPaymentRequest(driver, formDataRequest.getCardInfo());
 
             LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
@@ -54,26 +52,7 @@ public class SeleniumService {
             return FormDataResponse.builder()
                     .networkLogs(networkLogs)
                     .request(formDataRequest)
-                    .formPerformance(
-                            FormDataResponse.FormPerformance.builder()
-                                    .redirectStart(castToDouble(performanceMetrics.get(0)))
-                                    .redirectEnd(castToDouble(performanceMetrics.get(1)))
-                                    .fetchStart(castToDouble(performanceMetrics.get(2)))
-                                    .domainLookupStart(castToDouble(performanceMetrics.get(3)))
-                                    .domainLookupEnd(castToDouble(performanceMetrics.get(4)))
-                                    .connectStart(castToDouble(performanceMetrics.get(5)))
-                                    .secureConnectionStart(castToDouble(performanceMetrics.get(6)))
-                                    .connectEnd(castToDouble(performanceMetrics.get(7)))
-                                    .requestStart(castToDouble(performanceMetrics.get(8)))
-                                    .responseStart(castToDouble(performanceMetrics.get(9)))
-                                    .responseEnd(castToDouble(performanceMetrics.get(10)))
-                                    .domInteractive(castToDouble(performanceMetrics.get(11)))
-                                    .domContentLoadedEventStart(castToDouble(performanceMetrics.get(12)))
-                                    .domContentLoadedEventEnd(castToDouble(performanceMetrics.get(13)))
-                                    .domComplete(castToDouble(performanceMetrics.get(14)))
-                                    .loadEventStart(castToDouble(performanceMetrics.get(15)))
-                                    .build()
-                    )
+                    .performanceMetrics(performanceMetrics)
                     .region(region)
                     .browser(browser)
                     .build();
