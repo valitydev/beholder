@@ -12,14 +12,7 @@ import java.util.logging.Level;
 @UtilityClass
 public class SeleniumUtil {
 
-    public static final String PERFORMANCE_SCRIPT = """
-            var data = new Array();
-            var navigation = window.performance.getEntriesByType("navigation")[0];
-            data[0] = navigation.requestStart;
-            data[1] = navigation.responseStart;
-            data[2] = navigation.responseEnd;
-            data[3] = navigation.domComplete;
-            return data;""";
+    public static final String PERFORMANCE_SCRIPT = "return window.performance.getEntriesByType(\"navigation\")[0];";
 
     public static DesiredCapabilities getCommonCapabilities() {
         var capabilities = new DesiredCapabilities();

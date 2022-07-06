@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -11,7 +12,7 @@ public class FormDataResponse {
 
     private FormDataRequest request;
 
-    private FormPerformance formPerformance;
+    private Map<String, Object> performanceMetrics;
 
     private Browser browser;
 
@@ -20,19 +21,5 @@ public class FormDataResponse {
     private List<NetworkLog> networkLogs;
 
     private boolean failed;
-
-    @Data
-    @Builder
-    public static class FormPerformance {
-
-        private Double requestStartAt;
-
-        private Double responseStartAt;
-
-        private Double responseEndAt;
-
-        private Double domCompletedAt;
-
-    }
 
 }

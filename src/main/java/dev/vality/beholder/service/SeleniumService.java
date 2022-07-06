@@ -17,10 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-
-import static dev.vality.beholder.util.MetricUtil.castToDouble;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,8 +42,8 @@ public class SeleniumService {
             driver = new RemoteWebDriver(seleniumUrl, capabilities);
             driver.get(prepareParams(formDataRequest));
 
-            //noinspection rawtypes
-            ArrayList performanceMetrics = (ArrayList) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
+            Map<String, Object> performanceMetrics =
+                    (Map<String, Object>) driver.executeScript(SeleniumUtil.PERFORMANCE_SCRIPT);
             fillAndSendPaymentRequest(driver, formDataRequest.getCardInfo());
 
             LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
@@ -54,14 +52,7 @@ public class SeleniumService {
             return FormDataResponse.builder()
                     .networkLogs(networkLogs)
                     .request(formDataRequest)
-                    .formPerformance(
-                            FormDataResponse.FormPerformance.builder()
-                                    .requestStartAt(castToDouble(performanceMetrics.get(0)))
-                                    .responseStartAt(castToDouble(performanceMetrics.get(1)))
-                                    .responseEndAt(castToDouble(performanceMetrics.get(2)))
-                                    .domCompletedAt(castToDouble(performanceMetrics.get(3)))
-                                    .build()
-                    )
+                    .performanceMetrics(performanceMetrics)
                     .region(region)
                     .browser(browser)
                     .build();
