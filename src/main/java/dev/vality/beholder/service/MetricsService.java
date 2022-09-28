@@ -128,7 +128,7 @@ public class MetricsService {
                 .flatMap(formDataResponse ->
                         formDataResponse.getNetworkLogs().stream()
                                 .map(log -> convertToResourceLoadingEntry(formDataResponse, log)))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Math::max));
     }
 
     private Map.Entry<Tags, Double> convertToResourceLoadingEntry(FormDataResponse formDataResponse,
