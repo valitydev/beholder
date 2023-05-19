@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.20</version>
+        <version>1.0.17</version>
     </parent>
 
     <artifactId>beholder</artifactId>
@@ -29,9 +29,17 @@
 
         <!--vality-->
         <dependency>
+            <groupId>dev.vality.woody</groupId>
+            <artifactId>woody-thrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.vality</groupId>
+            <artifactId>shared-resources</artifactId>
+        </dependency>
+        <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>swag-payments</artifactId>
-            <version>1.639-01da4bb-client</version>
+            <version>1.627-0089567-client</version>
         </dependency>
 
         <!--spring-->
@@ -111,7 +119,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20230227</version>
+            <version>20220320</version>
         </dependency>
 
         <!--test-->
@@ -129,7 +137,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.17.6</version>
+            <version>1.17.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -141,7 +149,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core-java11</artifactId>
-            <version>6.4.1</version>
+            <version>6.1.6</version>
             <scope>test</scope>
         </dependency>
 
@@ -184,7 +192,7 @@
                     <dependency>
                         <groupId>org.apache.maven.shared</groupId>
                         <artifactId>maven-filtering</artifactId>
-                        <version>3.3.1</version>
+                        <version>3.2.0</version>
                     </dependency>
                 </dependencies>
                 <configuration>
