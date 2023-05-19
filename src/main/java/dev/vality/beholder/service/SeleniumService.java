@@ -83,7 +83,6 @@ public class SeleniumService {
         driver.findElementById("expire-date-input").sendKeys(card.getExpiration());
         driver.findElementById("secure-code-input").sendKeys(card.getCvv());
         driver.findElementById("card-holder-input").sendKeys("Ivan Ivanov");
-        driver.findElementById("email-input").sendKeys("test@test.com");
         driver.findElementById("pay-btn").click();
         new WebDriverWait(driver, formTimeoutSec).until(
                 ExpectedConditions.visibilityOfElementLocated(By.ById.id("success-icon")));
