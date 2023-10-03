@@ -6,11 +6,11 @@
     <parent>
         <groupId>dev.vality</groupId>
         <artifactId>service-parent-pom</artifactId>
-        <version>1.0.17</version>
+        <version>1.0.20</version>
     </parent>
 
     <artifactId>beholder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <name>beholder</name>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>swag-payments</artifactId>
-            <version>1.627-0089567-client</version>
+            <version>1.627-0081.646-ca73130-server</version>
         </dependency>
 
         <!--spring-->
@@ -137,20 +137,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.17.2</version>
-            <scope>test</scope>
+            <version>1.17.2</v1.19.1</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.17.2</version>
-            <scope>test</scope>
+            <version>1.17.2</v1.19.1</scope>
         </dependency>
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core-java11</artifactId>
-            <version>6.1.6</version>
-            <scope>test</scope>
+            <version>6.1.6</ve6.4.6</scope>
         </dependency>
 
     </dependencies>
@@ -192,7 +189,7 @@
                     <dependency>
                         <groupId>org.apache.maven.shared</groupId>
                         <artifactId>maven-filtering</artifactId>
-                        <version>3.2.0</version>
+                        <version>3.3.1</version>
                     </dependency>
                 </dependencies>
                 <configuration>
