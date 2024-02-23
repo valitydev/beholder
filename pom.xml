@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>beholder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <name>beholder</name>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>dev.vality</groupId>
             <artifactId>swag-payments</artifactId>
-            <version>1.627-0089567-client</version>
+            <version>1.650-5dc6d9f-server</version>
         </dependency>
 
         <!--spring-->
